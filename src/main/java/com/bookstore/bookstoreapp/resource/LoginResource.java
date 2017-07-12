@@ -26,9 +26,7 @@ public class LoginResource {
     }
 
     @RequestMapping(value="/user/logout", method=RequestMethod.POST)
-    public ResponseEntity logout(Principal principal){
-        String name = principal.getName();
-        System.out.println(name);
+    public ResponseEntity logout(){
         SecurityContextHolder.clearContext();
         return new ResponseEntity("Logout Successfully!", HttpStatus.OK);
     }
