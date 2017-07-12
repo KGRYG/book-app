@@ -33,17 +33,13 @@ public class BookResource {
 	}
 	
 	@RequestMapping(value="/add/image", method= RequestMethod.POST)
-	public ResponseEntity upload(
-            @RequestParam("id") Long id,
-            HttpServletResponse response, HttpServletRequest request
-			){
+	public ResponseEntity upload(@RequestParam("id") Long id, HttpServletRequest request ){
 		try {
 			Book book = bookService.findOne(id);
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 			Iterator<String> it = multipartRequest.getFileNames();
 			MultipartFile multipartFile = multipartRequest.getFile(it.next());
 			String fileName = id+".png";
-			
 			
 			byte[] bytes = multipartFile.getBytes();
 			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File("src/main/resources/static/image/book/"+fileName)));
