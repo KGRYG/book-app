@@ -2,7 +2,6 @@ package com.bookstore.bookstoreapp;
 
 import com.bookstore.bookstoreapp.domain.User;
 import com.bookstore.bookstoreapp.domain.security.Role;
-import com.bookstore.bookstoreapp.domain.security.UserRole;
 import com.bookstore.bookstoreapp.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @SpringBootApplication
 public class BookstoreAppApplication implements CommandLineRunner {
@@ -43,15 +39,7 @@ public class BookstoreAppApplication implements CommandLineRunner {
 		user.setPassword(webmasterPassword);
 		user.setEmail(webmasterEmail);
 		user.setUsername(webmasterUsername);
-
-		Set<UserRole> userRoles = new HashSet<>();
-		Role role = new Role();
-		role.setId(1);
-		role.setName("ROLE_ADMIN");
-		userRoles.add(new UserRole(user, role));
-
-		userService.createUser(user, userRoles);
-		userRoles.clear();
+		userService.createUser(user, Role.ROLE_ADMIN);
 
 	}
 }

@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -22,6 +24,7 @@ import java.security.SecureRandom;
  */
 @Configuration
 @EnableWebSecurity
+@PropertySource("file:///${user.home}/Dropbox/MyProjectWithBuddy/application.properties")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -47,8 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.httpBasic();
-        httpSecurity.csrf().disable()
-                .cors().and().authorizeRequests()
+        httpSecurity.cors();
+        httpSecurity.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and().authorizeRequests()
                 .antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();
     }
 
@@ -74,7 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 "accept",
                                 "origin",
                                 "authorization",
-                                "x-requested-with")
+                                "x-requested-with",
+                                "X-XSRF-TOKEN")
                         .allowCredentials(true).maxAge(3600)
                 ;
             }

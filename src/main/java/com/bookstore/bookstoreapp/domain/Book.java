@@ -1,7 +1,5 @@
 package com.bookstore.bookstoreapp.domain;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -28,8 +26,8 @@ public class Book implements Serializable{
 	@Column(columnDefinition="text")
 	private String description;
 	private int inStockNumber;
-	@Transient
-	private MultipartFile bookImage;
+	@Column(name = "book_image_url")
+	private String bookImageUrl;
 
 	public Long getId() {
 		return id;
@@ -159,12 +157,12 @@ public class Book implements Serializable{
 		this.inStockNumber = inStockNumber;
 	}
 
-	public MultipartFile getBookImage() {
-		return bookImage;
+	public String getBookImageUrl() {
+		return bookImageUrl;
 	}
 
-	public void setBookImage(MultipartFile bookImage) {
-		this.bookImage = bookImage;
+	public void setBookImageUrl(String bookImageUrl) {
+		this.bookImageUrl = bookImageUrl;
 	}
 	
 	

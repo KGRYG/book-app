@@ -1,8 +1,7 @@
 package com.bookstore.bookstoreapp.service.impl;
 
 import com.bookstore.bookstoreapp.domain.User;
-import com.bookstore.bookstoreapp.domain.security.UserRole;
-import com.bookstore.bookstoreapp.repository.RoleRepository;
+import com.bookstore.bookstoreapp.domain.security.Role;
 import com.bookstore.bookstoreapp.repository.UserRepository;
 import com.bookstore.bookstoreapp.service.UserService;
 import org.slf4j.Logger;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
 
 /**
  * Created by karen on 7/10/17.
@@ -27,13 +24,10 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
-    public User createUser(User user, Set<UserRole> userRoles) {
+    public User createUser(User user, Role userRole) {
         User localUser = userRepository.findByEmail(user.getEmail());
 
         if (localUser != null) {
@@ -43,11 +37,14 @@ public class UserServiceImpl implements UserService {
             String encryptedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encryptedPassword);
 
-            for (UserRole ur : userRoles) {
-                roleRepository.save(ur.getRole());
+            for (Role role : Role.values()) {
+                if (role == userRole) {
+                    user.setRole(role);
+                    break;
+                } else {
+                    user.setRole(Role.ROLE_USER);
+                }
             }
-
-            user.getUserRoles().addAll(userRoles);
 
             localUser = userRepository.save(user);
 

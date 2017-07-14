@@ -1,8 +1,7 @@
 package com.bookstore.bookstoreapp.domain;
 
 import com.bookstore.bookstoreapp.domain.security.Authority;
-import com.bookstore.bookstoreapp.domain.security.UserRole;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.bookstore.bookstoreapp.domain.security.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,24 +23,35 @@ public class User implements UserDetails, Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private Long id;
+
     @Column(unique = true)
     private String username;
+
     private String password;
+
     private String firstName;
+
     private String lastName;
+
     @Column(unique = true)
     private String email;
-    private String phone;
-    private boolean enabled = true;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<UserRole> userRoles = new HashSet<>();
 
+    @Column(length = 50)
+    private String phone;
+
+    private boolean enabled = true;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Role role;
+
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
+        authorities.add(new Authority(role.toString()));
         return authorities;
     }
 
@@ -124,11 +134,19 @@ public class User implements UserDetails, Serializable {
         this.enabled = enabled;
     }
 
-    public Set<UserRole> getUserRoles() {
-        return userRoles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setUserRoles(Set<UserRole> userRoles) {
-        this.userRoles = userRoles;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }
