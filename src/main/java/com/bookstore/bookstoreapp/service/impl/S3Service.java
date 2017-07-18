@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,10 +41,9 @@ public class S3Service {
     @Autowired
     private BookService bookService;
 
-    public void deleteImageFromS3(String bookId) {
-        Book book = bookService.findOne(Long.valueOf(bookId));
-
-        if (book != null && !book.getBookImageUrl().isEmpty()) {
+    @Async
+    public void deleteImageFromS3(Book book) {
+        if (book != null && book.getBookImageUrl()!= null) {
             AmazonS3URI amazonS3URI = new AmazonS3URI(book.getBookImageUrl());
             s3Client.deleteObject(amazonS3URI.getBucket(), amazonS3URI.getKey());
         }

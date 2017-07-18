@@ -90,7 +90,8 @@ public class BookResource {
 	
 	@RequestMapping(value="/remove", method= RequestMethod.POST)
 	public ResponseEntity remove(@RequestBody String id) throws IOException {
-		s3Service.deleteImageFromS3(id);
+		Book book = bookService.findOne(Long.valueOf(id));
+		s3Service.deleteImageFromS3(book);
 		bookService.removeOne(Long.parseLong(id));
 		
 		return new ResponseEntity("Remove Success!", HttpStatus.OK);
