@@ -15,9 +15,7 @@ public class BookServiceImpl implements BookService {
 	@Autowired
 	private BookRepository bookRepository;
 
-	/*
-	*
-	* Performance issue method e.g. for loop is iterating over book list*/
+	/* Performance issue method e.g. for loop is iterating over book list*/
 	public List<Book> findAll() {
 		List<Book> bookList = (List<Book>) bookRepository.findAll();
 		
@@ -35,7 +33,7 @@ public class BookServiceImpl implements BookService {
 	public Book findOne(Long id) {
 		return bookRepository.findOne(id);
 	}
-	
+
 	public Book save(Book book) {
 		return bookRepository.save(book);
 	}
@@ -53,7 +51,7 @@ public class BookServiceImpl implements BookService {
 		
 		return activeBookList;
 	}
-	
+
 	public void removeOne(Long id) {
 		bookRepository.delete(id);
 	}

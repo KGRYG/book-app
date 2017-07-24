@@ -10,10 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
 @EnableAsync
 @PropertySource("file:///${user.home}/Dropbox/MyProjectWithBuddy/application.properties")
 public class ApplicationConfig {

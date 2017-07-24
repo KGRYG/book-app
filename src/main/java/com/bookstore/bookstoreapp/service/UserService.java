@@ -7,4 +7,12 @@ import com.bookstore.bookstoreapp.domain.security.Role;
  */
 public interface UserService {
     User createUser(User user, Role userRole);
+
+    User save(User user);
+
+    User findById(Long id);
+
+    User findByUsername(String username);
+
+    User findByEmail(String email);
 }
