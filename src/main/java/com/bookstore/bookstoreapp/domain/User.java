@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -47,6 +48,18 @@ public class User implements UserDetails, Serializable {
 
     @Column(name = "profile_image_url")
     private String profileImageUrl;
+
+    @OneToMany(cascade={CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE, CascadeType.REFRESH}, mappedBy = "user", orphanRemoval = true)
+    private List<UserPayment> userPaymentList;
+
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private List<UserShipping> userShippingList;
+
+    @OneToOne(cascade=CascadeType.ALL, mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    private ShoppingCart shoppingCart;
+
+    @OneToMany(mappedBy="user", orphanRemoval = true)
+    private List<Order> orderList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -148,5 +161,48 @@ public class User implements UserDetails, Serializable {
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public List<UserPayment> getUserPaymentList() {
+        return userPaymentList;
+    }
+
+    public void setUserPaymentList(List<UserPayment> userPaymentList) {
+        this.userPaymentList = userPaymentList;
+    }
+
+    public List<UserShipping> getUserShippingList() {
+        return userShippingList;
+    }
+
+    public void setUserShippingList(List<UserShipping> userShippingList) {
+        this.userShippingList = userShippingList;
+    }
+
+    public void addUserShipping(UserShipping userShipping) {
+        userShippingList.add(userShipping);
+        userShipping.setUser(this);
+    }
+
+    public void removeUserShipping(UserShipping userShipping) {
+        userShippingList.remove(userShipping);
+        userShipping.setUser(null);
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+        shoppingCart.setUser(this);
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 }

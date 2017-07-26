@@ -21,7 +21,9 @@ public class ShoppingCart implements Serializable{
 	@JsonIgnore
 	private List<CartItem> cartItemList;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	@MapsId
 	@JsonIgnore
 	private User user;
 

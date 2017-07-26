@@ -94,23 +94,22 @@ public class UserResource {
 				return new ResponseEntity("Username not found!", HttpStatus.BAD_REQUEST);
 			}
 		}
-			String dbPassword = currentUser.getPassword();
-			
-			if(null != currentPassword)
-			if(bCryptPasswordEncoder.matches(currentPassword, dbPassword)) {
-				if(newPassword != null && !newPassword.isEmpty() && !newPassword.equals("")) {
-					currentUser.setPassword(bCryptPasswordEncoder.encode(newPassword));
-				}
-				currentUser.setEmail(email);
-			} else {
-				return new ResponseEntity("Incorrect current password!", HttpStatus.BAD_REQUEST);
-			}
-		
-		
+
+        String dbPassword = currentUser.getPassword();
+
+		if(currentPassword != null) {
+            if (bCryptPasswordEncoder.matches(currentPassword, dbPassword)) {
+                if (newPassword != null && !newPassword.isEmpty() && !newPassword.equals("")) {
+                    currentUser.setPassword(bCryptPasswordEncoder.encode(newPassword));
+                }
+                currentUser.setEmail(email);
+            } else {
+                return new ResponseEntity("Incorrect current password!", HttpStatus.BAD_REQUEST);
+            }
+        }
 		currentUser.setFirstName(firstName);
 		currentUser.setLastName(lastName);
 		currentUser.setUsername(username);
-		
 		
 		userService.save(currentUser);
 		

@@ -35,7 +35,7 @@ public class Order implements Serializable{
 	@OneToOne(cascade= CascadeType.ALL)
 	private Payment payment;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private User user;
 
